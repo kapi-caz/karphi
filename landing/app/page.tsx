@@ -123,8 +123,8 @@ export default function TerminalApp() {
       case 'contact':
         newOutput.push(
           { type: 'header', content: 'KONTAKT' },
-          { type: 'link', content: 'GitHub: github.com/meinname', url: 'https://github.com/kapi-caz' },
-          { type: 'link', content: 'LinkedIn: linkedin.com/in/meinname', url: 'https://www.linkedin.com/in/kapilankoch/' }
+          { type: 'link', content: 'GitHub: github.com/kapi-caz', url: 'https://github.com/kapi-caz' },
+          { type: 'link', content: 'LinkedIn: linkedin.com/in/kapilankoch', url: 'https://www.linkedin.com/in/kapilankoch/' }
         );
         break;
 
