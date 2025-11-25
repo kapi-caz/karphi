@@ -1,49 +1,7 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, Maximize2, Minimize2, X, Github, Linkedin, Mail } from 'lucide-react';
-
-const themes = {
-  retro: {
-    name: 'Retro Green',
-    bg: 'bg-black',
-    text: 'text-green-500',
-    border: 'border-green-700',
-    prompt: 'text-green-300',
-    selection: 'selection:bg-green-900 selection:text-green-100',
-    button: 'bg-green-500',
-    glow: 'shadow-[0_0_20px_rgba(34,197,94,0.2)]'
-  },
-  cyberpunk: {
-    name: 'Neon City',
-    bg: 'bg-slate-900',
-    text: 'text-pink-400',
-    border: 'border-pink-500',
-    prompt: 'text-cyan-400',
-    selection: 'selection:bg-pink-900 selection:text-white',
-    button: 'bg-pink-500',
-    glow: 'shadow-[0_0_20px_rgba(244,114,182,0.3)]'
-  },
-  dracula: {
-    name: 'Dracula',
-    bg: 'bg-[#282a36]',
-    text: 'text-[#f8f8f2]',
-    border: 'border-[#6272a4]',
-    prompt: 'text-[#50fa7b]',
-    selection: 'selection:bg-[#44475a]',
-    button: 'bg-[#bd93f9]',
-    glow: 'shadow-[0_0_20px_rgba(189,147,249,0.2)]'
-  },
-  ubuntu: {
-    name: 'Ubuntu',
-    bg: 'bg-[#300a24]',
-    text: 'text-white',
-    border: 'border-[#E95420]',
-    prompt: 'text-[#E95420]',
-    selection: 'selection:bg-[#E95420]',
-    button: 'bg-[#E95420]',
-    glow: 'shadow-xl'
-  }
-};
+import { Themes } from './data/themes';
 
 const commands = {
   help: "Zeigt alle verfügbaren Befehle an.",
@@ -70,7 +28,7 @@ export default function TerminalApp() {
   
   const inputRef = useRef(null);
   const bottomRef = useRef(null);
-  const theme = themes[currentTheme];
+  const theme = Themes[currentTheme];
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -297,14 +255,14 @@ export default function TerminalApp() {
               onChange={(e) => {
                 const newTheme = e.target.value;
                 setCurrentTheme(newTheme);
-                setOutput(prev => [...prev, { type: 'success', content: `Theme gewechselt zu: ${themes[newTheme].name}` }]);
+                setOutput(prev => [...prev, { type: 'success', content: `Theme gewechselt zu: ${Themes[newTheme].name}` }]);
                 // Re-focus input after selection so typing can continue immediately
                 setTimeout(() => inputRef.current?.focus(), 10);
               }}
               className={`bg-transparent outline-none border-none cursor-pointer uppercase font-bold ${theme.text} hover:opacity-100 transition-opacity`}
               style={{ textAlignLast: 'right' }}
             >
-              {Object.keys(themes).map((t) => (
+              {Object.keys(Themes).map((t) => (
                 <option key={t} value={t} className="bg-gray-900 text-gray-100">
                   {t.toUpperCase()}
                 </option>
