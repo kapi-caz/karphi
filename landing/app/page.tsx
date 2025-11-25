@@ -98,17 +98,16 @@ export default function TerminalApp() {
       case 'about':
         newOutput.push(
           { type: 'header', content: 'ÜBER MICH' },
-          { type: 'response', content: 'Hallo! Ich bin ein leidenschaftlicher Entwickler, der es liebt, komplexe Probleme mit elegantem Code zu lösen.' },
-          { type: 'response', content: 'Ich baue Webanwendungen, experimentiere mit UI/UX und trinke gerne guten Kaffee.' }
+          { type: 'response', content: 'Hallo! Hier wird mal mehr stehen...' }
         );
         break;
 
       case 'skills':
         newOutput.push(
           { type: 'header', content: 'TECH STACK' },
-          { type: 'response', content: 'Frontend:  React, Vue, Tailwind CSS, TypeScript' },
-          { type: 'response', content: 'Backend:   Node.js, Python, PostgreSQL' },
-          { type: 'response', content: 'Tools:     Git, Docker, Linux, AWS' }
+          { type: 'response', content: 'Frontend:  NextJS, Vue, Tailwind CSS, TypeScript' },
+          { type: 'response', content: 'Backend:   Rust, NodeJS' },
+          { type: 'response', content: 'Tools:     Git, Docker, MacOS, AWS, Azure, OpenTofu, Terraform' }
         );
         break;
 
@@ -116,17 +115,16 @@ export default function TerminalApp() {
         newOutput.push(
           { type: 'header', content: 'PROJEKTE' },
           { type: 'response', content: '1. Terminal Portfolio (Dieses Projekt) - React & Tailwind' },
-          { type: 'response', content: '2. E-Commerce Dashboard - Vue.js & Firebase' },
-          { type: 'response', content: '3. AI Chatbot Interface - Python & OpenAI API' }
+          { type: 'response', content: '2. MuseMachine - Startup rund um bildgenerierende KI' },
+          { type: 'response', content: '3. Fitti (in Entwicklung) - Ganz simple Android App um einfach einen Workout zu tracken mit einem Timer' }
         );
         break;
 
       case 'contact':
         newOutput.push(
           { type: 'header', content: 'KONTAKT' },
-          { type: 'link', content: 'GitHub: github.com/meinname', url: 'https://github.com' },
-          { type: 'link', content: 'LinkedIn: linkedin.com/in/meinname', url: 'https://linkedin.com' },
-          { type: 'link', content: 'Email: hallo@beispiel.de', url: 'mailto:hallo@beispiel.de' }
+          { type: 'link', content: 'GitHub: github.com/meinname', url: 'https://github.com/kapi-caz' },
+          { type: 'link', content: 'LinkedIn: linkedin.com/in/meinname', url: 'https://www.linkedin.com/in/kapilankoch/' }
         );
         break;
 
