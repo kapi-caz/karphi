@@ -69,8 +69,8 @@ export default function TerminalApp() {
       case 'skills':
         newOutput.push(
           { type: 'header', content: 'TECH STACK' },
-          { type: 'response', content: 'Frontend:  NextJS, Vue, Tailwind CSS, TypeScript' },
-          { type: 'response', content: 'Backend:   Rust, NodeJS' },
+          { type: 'response', content: 'Frontend:  NextJS, VueJS, Tailwind CSS, TypeScript' },
+          { type: 'response', content: 'Backend:   Rust, NodeJS, Golang' },
           { type: 'response', content: 'Tools:     Git, Docker, MacOS, AWS, Azure, OpenTofu, Terraform' }
         );
         break;
