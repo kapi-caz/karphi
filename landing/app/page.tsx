@@ -3,6 +3,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, Maximize2, Minimize2, X, Github, Linkedin, Mail } from 'lucide-react';
 import { Themes } from './data/themes';
 
+interface output {
+  type: string,
+  content: string,
+  url?: string
+}
+
 const commands = {
   help: "Zeigt alle verfügbaren Befehle an.",
   about: "Erzählt dir etwas über mich.",
@@ -24,10 +30,10 @@ export default function TerminalApp() {
     { type: 'info', content: 'Tippe "help" ein, um eine Liste der Befehle zu sehen.' },
   ]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [commandHistory, setCommandHistory] = useState([]);
-  
-  const inputRef = useRef(null);
-  const bottomRef = useRef(null);
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
   const theme = Themes[currentTheme];
 
   // Auto-scroll to bottom
@@ -40,10 +46,10 @@ export default function TerminalApp() {
     inputRef.current?.focus();
   };
 
-  const processCommand = (cmd) => {
+  const processCommand = (cmd: string) => {
     const args = cmd.trim().split(' ');
     const mainCommand = args[0].toLowerCase();
-    const newOutput = [...output, { type: 'command', content: cmd }];
+    const newOutput: output[] = [...output, { type: 'command', content: cmd }];
 
     switch (mainCommand) {
       case 'help':
@@ -87,18 +93,18 @@ export default function TerminalApp() {
         break;
 
       case 'theme':
-        const themeNames = Object.keys(themes);
+        const themeNames = Object.keys(Themes);
         const requestedTheme = args[1]?.toLowerCase();
-        
+
         if (requestedTheme && themeNames.includes(requestedTheme)) {
           setCurrentTheme(requestedTheme);
-          newOutput.push({ type: 'success', content: `Theme gewechselt zu: ${themes[requestedTheme].name}` });
+          newOutput.push({ type: 'success', content: `Theme gewechselt zu: ${Themes[requestedTheme].name}` });
         } else {
           // Cycle to next theme if no argument
           const currentIndex = themeNames.indexOf(currentTheme);
           const nextTheme = themeNames[(currentIndex + 1) % themeNames.length];
           setCurrentTheme(nextTheme);
-          newOutput.push({ type: 'success', content: `Theme gewechselt zu: ${themes[nextTheme].name}` });
+          newOutput.push({ type: 'success', content: `Theme gewechselt zu: ${Themes[nextTheme].name}` });
           newOutput.push({ type: 'info', content: `Verfügbare Themes: ${themeNames.join(', ')}` });
         }
         break;
@@ -121,7 +127,7 @@ export default function TerminalApp() {
     setOutput(newOutput);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       const command = input;
       setCommandHistory([...commandHistory, command]);
@@ -151,12 +157,12 @@ export default function TerminalApp() {
   };
 
   return (
-    <div 
+    <div
       className={`min-h-screen w-full flex items-center justify-center p-4 transition-colors duration-500 font-mono ${theme.bg} ${theme.selection}`}
       onClick={handleContainerClick}
     >
       <div className={`w-full max-w-[1024px] h-[80vh] md:h-[900px] flex flex-col rounded-lg overflow-hidden border-2 transition-colors duration-300 ${theme.border} ${theme.glow} bg-opacity-90 backdrop-blur-sm relative`}>
-        
+
         {/* Window Header */}
         <div className={`h-8 border-b flex items-center justify-between px-3 ${theme.border} bg-opacity-50 select-none`}>
           <div className="flex items-center gap-2">
@@ -173,10 +179,10 @@ export default function TerminalApp() {
 
         {/* Terminal Body */}
         <div className="flex-1 overflow-y-auto p-4 md:p-6 scrollbar-hide text-sm md:text-base cursor-text" onClick={handleContainerClick}>
-          
+
           {/* Output Log */}
           <div className="space-y-1">
-            {output.map((line, i) => (
+            {output.map((line: output, i) => (
               <div key={i} className={`${theme.text} break-words`}>
                 {line.type === 'command' && (
                   <div className="mt-4 flex">
@@ -184,7 +190,7 @@ export default function TerminalApp() {
                     <span className="opacity-90">{line.content}</span>
                   </div>
                 )}
-                
+
                 {line.type === 'response' && (
                   <div className="ml-6 opacity-80 whitespace-pre-wrap">{line.content}</div>
                 )}
@@ -233,7 +239,7 @@ export default function TerminalApp() {
                 autoComplete="off"
               />
               {/* Custom blinking cursor to match theme */}
-              <div 
+              <div
                 className={`absolute top-0 pointer-events-none ${theme.text}`}
                 style={{ left: `${input.length}ch` }}
               >
@@ -248,9 +254,9 @@ export default function TerminalApp() {
         <div className={`h-6 border-t ${theme.border} bg-opacity-30 flex items-center justify-between px-4 text-xs ${theme.text} opacity-60`}>
           <span>BASH</span>
           <span className="hidden sm:inline">UTF-8</span>
-          
+
           <div className="flex items-center">
-             <select
+            <select
               value={currentTheme}
               onChange={(e) => {
                 const newTheme = e.target.value;
@@ -271,7 +277,7 @@ export default function TerminalApp() {
           </div>
         </div>
       </div>
-      
+
       {/* Quick Theme Switcher Hints (Visual Aid) - Keep for mobile users as a fallback */}
       <div className="fixed bottom-4 right-4 flex flex-col gap-2 md:hidden opacity-50 hover:opacity-100 transition-opacity">
         <button onClick={() => processCommand('theme retro')} className="w-8 h-8 rounded-full bg-green-900 border border-green-500"></button>
