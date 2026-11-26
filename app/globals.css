@@ -1,26 +1,364 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: #000;
+  margin: 0;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ---------- Boot ---------- */
+
+.boot-line { animation: boot-line-in 120ms ease-out; }
+@keyframes boot-line-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Desktop (XP-style, tinted by the active theme) ----------
+   Theme colours come in as --os-bg, --os-text, --os-border, --os-prompt, --os-button. */
+
+.os-root {
+  --os-surface: color-mix(in srgb, var(--os-border) 14%, var(--os-bg));
+  --os-surface-hi: color-mix(in srgb, var(--os-border) 26%, var(--os-bg));
+  --os-title-hi: color-mix(in srgb, var(--os-border) 55%, white);
+  --os-title-lo: color-mix(in srgb, var(--os-border) 75%, black);
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  font-family: Tahoma, "Segoe UI", Verdana, Geneva, sans-serif;
+  font-size: 12px;
+  color: var(--os-text);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.os-boot-in { animation: os-fade-in 600ms ease-out; }
+@keyframes os-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+.os-wallpaper {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(140% 55% at 25% 108%, color-mix(in srgb, var(--os-button) 70%, var(--os-bg)) 0 48%, transparent 48.4%),
+    radial-gradient(120% 60% at 95% 118%, color-mix(in srgb, var(--os-border) 80%, var(--os-bg)) 0 50%, transparent 50.4%),
+    radial-gradient(60% 40% at 75% 18%, color-mix(in srgb, var(--os-prompt) 22%, transparent), transparent 70%),
+    linear-gradient(to bottom, var(--os-bg) 0%, color-mix(in srgb, var(--os-border) 45%, var(--os-bg)) 100%);
+}
+.os-wallpaper::after {
+  /* faint CRT scanlines, a wink to the terminal */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,.08) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+}
+
+/* Desktop icons */
+.os-icons {
+  position: absolute;
+  inset: 0 0 36px 0;
+  padding: 10px 6px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(auto-fill, 86px);
+  grid-auto-columns: 84px;
+  gap: 4px;
+  align-content: start;
+}
+.os-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 2px;
+  border: 1px dotted transparent;
+  background: none;
+  color: #fff;
+  cursor: default;
+  outline: none;
+}
+.os-icon span {
+  padding: 1px 3px;
+  text-align: center;
+  line-height: 1.2;
+  text-shadow: 1px 1px 1px rgba(0,0,0,.9);
+  word-break: break-word;
+}
+.os-icon.is-selected svg { filter: drop-shadow(0 0 0 var(--os-border)) brightness(.8) sepia(.3); }
+.os-icon.is-selected span { background: var(--os-border); text-shadow: none; }
+.os-icon:focus-visible { border-color: rgba(255,255,255,.7); }
+
+/* Windows */
+.xp-window {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: var(--os-surface);
+  border: 3px solid var(--os-title-lo);
+  border-top: 0;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 2px 4px 14px rgba(0,0,0,.55);
+  min-width: 220px;
+}
+.xp-window.is-max { border-radius: 0; border-width: 0; }
+.xp-window:not(.is-active) { filter: saturate(.55); }
+.xp-window:not(.is-active) .xp-titlebar { opacity: .85; }
+
+.xp-titlebar {
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px 0 7px;
+  margin: 0 -3px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(to bottom,
+    var(--os-title-hi) 0%,
+    var(--os-border) 12%,
+    color-mix(in srgb, var(--os-border) 90%, black) 70%,
+    var(--os-title-lo) 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4);
+  color: #fff;
+  touch-action: none;
+  cursor: default;
+}
+.xp-window.is-max .xp-titlebar { margin: 0; border-radius: 0; }
+.xp-title {
+  flex: 1;
+  font: bold 13px "Trebuchet MS", Tahoma, sans-serif;
+  text-shadow: 1px 1px 1px rgba(0,0,0,.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xp-controls { display: flex; gap: 2px; }
+.xp-ctrl {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  color: #fff;
+  background: linear-gradient(to bottom right, var(--os-title-hi), var(--os-border) 60%, var(--os-title-lo));
+  box-shadow: inset 0 0 2px rgba(255,255,255,.5);
+}
+.xp-ctrl:hover { filter: brightness(1.15); }
+.xp-ctrl:active { filter: brightness(.85); }
+.xp-close { background: linear-gradient(to bottom right, #f1a089, #d6461f 55%, #a52a0a); }
+
+.xp-window-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+.xp-menubar {
+  display: flex;
+  gap: 2px;
+  padding: 2px 4px;
+  background: var(--os-surface-hi);
+  border-bottom: 1px solid color-mix(in srgb, var(--os-border) 50%, transparent);
+}
+.xp-menubar span { padding: 1px 6px; }
+.xp-menubar span:hover { background: var(--os-border); color: #fff; }
+
+.notepad-text {
+  flex: 1;
+  overflow: auto;
+  margin: 2px;
+  padding: 6px 8px;
+  background: var(--os-bg);
+  color: var(--os-text);
+  border: 1px solid color-mix(in srgb, var(--os-border) 70%, black);
+  font: 13px/1.45 "Lucida Console", var(--font-geist-mono), Consolas, monospace;
+  white-space: pre-wrap;
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
+  outline: none;
+}
+.notepad-text::selection, .notepad-text *::selection { background: var(--os-border); color: #fff; }
+.notepad-text a { color: var(--os-prompt); text-decoration: underline; cursor: pointer; }
+.notepad-text a:hover { text-decoration: none; }
+
+.xp-statusbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 2px 8px;
+  background: var(--os-surface-hi);
+  border-top: 1px solid color-mix(in srgb, var(--os-border) 50%, transparent);
+  opacity: .8;
+  font-size: 11px;
+}
+
+/* Dialog controls */
+.xp-dialog { background: var(--os-surface); }
+.xp-tabs { display: flex; padding: 8px 8px 0; }
+.xp-tabs span {
+  padding: 3px 10px;
+  border: 1px solid var(--os-border);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  background: var(--os-surface-hi);
+  box-shadow: inset 0 2px 0 var(--os-prompt);
+}
+.xp-panel { margin: 0 8px; padding: 10px; border: 1px solid var(--os-border); background: var(--os-surface-hi); }
+.xp-fieldset { border: 1px solid color-mix(in srgb, var(--os-border) 70%, transparent); border-radius: 3px; padding: 6px 10px 10px; }
+.xp-fieldset legend { padding: 0 4px; color: var(--os-prompt); }
+.xp-fieldset input { accent-color: var(--os-button); }
+
+.xp-btn {
+  min-width: 75px;
+  padding: 4px 10px;
+  border: 1px solid color-mix(in srgb, var(--os-border) 70%, black);
+  border-radius: 3px;
+  color: var(--os-text);
+  background: linear-gradient(to bottom, var(--os-surface-hi), var(--os-surface));
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.xp-btn:hover:not(:disabled) { box-shadow: inset 0 0 0 2px var(--os-prompt); }
+.xp-btn:focus-visible { outline: 1px dotted var(--os-text); outline-offset: -4px; }
+.xp-btn:disabled { opacity: .45; }
+
+/* Taskbar */
+.xp-taskbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: stretch;
+  background: linear-gradient(to bottom,
+    var(--os-title-hi) 0%,
+    var(--os-border) 8%,
+    color-mix(in srgb, var(--os-border) 85%, black) 90%,
+    var(--os-title-lo) 100%);
+  border-top: 1px solid color-mix(in srgb, var(--os-border) 40%, white);
+}
+.xp-start {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 18px 0 10px;
+  margin-right: 8px;
+  border-radius: 0 12px 12px 0;
+  color: #fff;
+  font: italic bold 18px "Trebuchet MS", Tahoma, sans-serif;
+  text-shadow: 1px 1px 2px rgba(0,0,0,.6);
+  background: linear-gradient(to bottom,
+    color-mix(in srgb, var(--os-button) 55%, white) 0%,
+    var(--os-button) 15%,
+    color-mix(in srgb, var(--os-button) 75%, black) 100%);
+  box-shadow: inset -2px 0 3px rgba(0,0,0,.35), 2px 0 4px rgba(0,0,0,.3);
+}
+.xp-start:hover { filter: brightness(1.1); }
+.xp-start.is-open { filter: brightness(.85); }
+.xp-tasks { flex: 1; display: flex; gap: 3px; padding: 3px 0; min-width: 0; overflow: hidden; }
+.xp-task {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 160px;
+  min-width: 40px;
+  padding: 0 8px;
+  border-radius: 3px;
+  color: #fff;
+  background: color-mix(in srgb, var(--os-border) 80%, white);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.35);
+  text-shadow: 1px 1px 1px rgba(0,0,0,.5);
+}
+.xp-task span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.xp-task.is-active { background: var(--os-title-lo); box-shadow: inset 1px 1px 3px rgba(0,0,0,.5); }
+.xp-tray {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  color: #fff;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--os-prompt) 35%, var(--os-border)), color-mix(in srgb, var(--os-prompt) 20%, var(--os-title-lo)));
+  border-left: 1px solid rgba(0,0,0,.35);
+  box-shadow: inset 1px 0 0 rgba(255,255,255,.25);
+  text-shadow: 1px 1px 1px rgba(0,0,0,.5);
+}
+.xp-tray-theme { display: grid; place-items: center; }
+.xp-swatch { width: 12px; height: 12px; border: 1px solid #fff; border-radius: 2px; flex-shrink: 0; }
+
+/* Start menu */
+.xp-start-menu {
+  position: absolute;
+  left: 0;
+  bottom: 36px;
+  z-index: 10001;
+  width: min(400px, 100vw);
+  border: 2px solid var(--os-title-lo);
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+  box-shadow: 3px -2px 12px rgba(0,0,0,.5);
+  animation: os-fade-in 120ms ease-out;
+}
+.xp-start-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  color: #fff;
+  font: bold 15px "Trebuchet MS", Tahoma, sans-serif;
+  text-shadow: 1px 1px 2px rgba(0,0,0,.6);
+  background: linear-gradient(to bottom, var(--os-title-hi), var(--os-border) 20%, var(--os-title-lo));
+}
+.xp-avatar {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  background: var(--os-bg);
+  color: var(--os-prompt);
+  font-family: var(--font-geist-mono), monospace;
+  text-shadow: none;
+}
+.xp-start-body { display: grid; grid-template-columns: 1fr 1fr; }
+.xp-start-body ul { list-style: none; margin: 0; padding: 6px 0; }
+.xp-start-left { background: var(--os-bg); }
+.xp-start-right { background: var(--os-surface-hi); border-left: 1px solid color-mix(in srgb, var(--os-border) 60%, transparent); }
+.xp-start-body button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  color: var(--os-text);
+  text-align: left;
+}
+.xp-start-left button { font-weight: bold; }
+.xp-start-body button:hover { background: var(--os-border); color: #fff; }
+.xp-start-body button.is-current { color: var(--os-prompt); }
+.xp-start-body button.is-current:hover { color: #fff; }
+.xp-start-caption { padding: 2px 10px 4px; opacity: .6; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+.xp-start-sep { margin: 6px 10px; border-top: 1px solid color-mix(in srgb, var(--os-border) 70%, transparent); }
+.xp-start-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 10px;
+  background: linear-gradient(to bottom, var(--os-border), var(--os-title-lo));
+}
+.xp-start-footer button { display: flex; align-items: center; gap: 6px; padding: 3px 8px; color: #fff; border-radius: 3px; }
+.xp-start-footer button:hover { background: rgba(255,255,255,.15); }
+.xp-power {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  background: linear-gradient(to bottom right, #f1a089, #d6461f 55%, #a52a0a);
+  font-size: 13px;
 }
