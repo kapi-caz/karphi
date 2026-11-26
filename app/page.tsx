@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react';
-import { Terminal, Maximize2, Minimize2, X, Github, Linkedin, Mail } from 'lucide-react';
+import { Maximize2, Minimize2 } from 'lucide-react';
 import { Themes } from './data/themes';
 
 interface output {
@@ -17,7 +17,6 @@ const commands = {
   contact: "Kontaktinformationen.",
   theme: "Wechselt das Farbschema (Klicken oder 'theme <name>' tippen).",
   clear: "Löscht den Terminal-Verlauf.",
-  all: "Führt alle Befehle nacheinander aus (Showcase)."
 };
 
 export default function TerminalApp() {
