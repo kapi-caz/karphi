@@ -23,7 +23,12 @@ function useClock() {
     return now;
 }
 
-export default function Desktop({ themeKey, onReboot }: { themeKey: string; onReboot: () => void }) {
+export default function Desktop({ themeKey, contents, onReboot }: {
+    themeKey: string;
+    /** Notepad texts by file id, loaded from /content at build time. */
+    contents: Record<string, string>;
+    onReboot: () => void;
+}) {
     const [windows, setWindows] = useState<WinState[]>([]);
     const [selected, setSelected] = useState<string | null>(null);
     const [startOpen, setStartOpen] = useState(false);
@@ -80,7 +85,7 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
     const renderApp = (file: DesktopFile) => {
         switch (file.app) {
             case 'notepad':
-                return <Notepad lines={file.lines ?? []} />;
+                return <Notepad text={contents[file.id] ?? ''} />;
             case 'display':
                 return <DisplayProperties current={themeKey} onApply={setTheme} onClose={() => close(file.id)} />;
             case 'error':

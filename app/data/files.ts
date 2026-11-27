@@ -1,6 +1,6 @@
 // Desktop "files" — the former terminal commands, now opened in Notepad.
-
-export type Line = string | { text: string; url: string };
+// The text of each Notepad file lives in /content as Markdown and is read at build time
+// (see app/lib/content.ts).
 
 export type IconKind = 'text' | 'contact' | 'display' | 'admin' | 'readme' | 'folder';
 
@@ -16,7 +16,11 @@ export interface DesktopFile {
     /** Optional glow colour; makes the icon softly pulse with a glow (e.g. '#0FFEC5'). */
     glow?: string;
     app: AppKind;
-    lines?: Line[];
+    /**
+     * Notepad text: path of a Markdown file inside /content (e.g. 'projects/fitti.md').
+     * Shown as plain text; [label](https://…) links become clickable.
+     */
+    content?: string;
     /** Id of the folder this file lives in. Files without a parent sit on the desktop. */
     parent?: string;
     width?: number;
@@ -29,41 +33,21 @@ export const Files: DesktopFile[] = [
         name: 'Liesmich.txt',
         icon: 'readme',
         app: 'notepad',
-        lines: [
-            'WILLKOMMEN BEI KARPHI OS',
-            '========================',
-            '',
-            'Doppelklick auf eine Datei öffnet sie.',
-            '',
-            '  about.txt      - Erzählt dir etwas über mich.',
-            '  skills.txt     - Zeigt meine technischen Fähigkeiten.',
-            '  Projekte       - Ordner mit meinen aktuellen Projekten.',
-            '  kontakt.txt    - Kontaktinformationen.',
-            '  Anzeige        - Wechselt das Farbschema.',
-            '',
-            'Über "Start" kannst du das System auch neu starten.',
-        ],
+        content: 'liesmich.md',
     },
     {
         id: 'about',
         name: 'about.txt',
         icon: 'text',
         app: 'notepad',
-        lines: ['ÜBER MICH', '=========', '', 'Hallo! Hier wird mal mehr stehen...'],
+        content: 'about.md',
     },
     {
         id: 'skills',
         name: 'skills.txt',
         icon: 'text',
         app: 'notepad',
-        lines: [
-            'TECH STACK',
-            '==========',
-            '',
-            'Frontend:  NextJS, VueJS, Tailwind CSS, TypeScript',
-            'Backend:   Rust, NodeJS, Golang',
-            'Tools:     Git, Docker, MacOS, AWS, Azure, OpenTofu, Terraform',
-        ],
+        content: 'skills.md',
     },
     {
         id: 'projects',
@@ -79,14 +63,7 @@ export const Files: DesktopFile[] = [
         icon: 'text',
         app: 'notepad',
         parent: 'projects',
-        lines: [
-            'TERMINAL PORTFOLIO',
-            '==================',
-            '',
-            'Dieses Projekt.',
-            '',
-            'Stack: React & Tailwind',
-        ],
+        content: 'projects/terminal-portfolio.md',
     },
     {
         id: 'project-musemachine',
@@ -96,12 +73,7 @@ export const Files: DesktopFile[] = [
         glow: '#0FFEC5',
         app: 'notepad',
         parent: 'projects',
-        lines: [
-            'MUSEMACHINE',
-            '===========',
-            '',
-            'Startup rund um bildgenerierende KI.',
-        ],
+        content: 'projects/musemachine.md',
     },
     {
         id: 'project-fitti',
@@ -109,14 +81,7 @@ export const Files: DesktopFile[] = [
         icon: 'text',
         app: 'notepad',
         parent: 'projects',
-        lines: [
-            'FITTI',
-            '=====',
-            '',
-            'Status: in Entwicklung',
-            '',
-            'Ganz simple Android App um einfach einen Workout zu tracken mit einem Timer.',
-        ],
+        content: 'projects/fitti.md',
     },
     {
         id: 'project-coming-soon',
@@ -125,26 +90,14 @@ export const Files: DesktopFile[] = [
         image: '/coming_soon.svg',
         app: 'notepad',
         parent: 'projects',
-        lines: [
-            'COMING SOON',
-            '===========',
-            '',
-            'Ein neues Projekt ist in Arbeit.',
-            'Bald gibt es hier mehr zu sehen...',
-        ],
+        content: 'projects/coming-soon.md',
     },
     {
         id: 'contact',
         name: 'kontakt.txt',
         icon: 'contact',
         app: 'notepad',
-        lines: [
-            'KONTAKT',
-            '=======',
-            '',
-            { text: 'GitHub:   github.com/kapi-caz', url: 'https://github.com/kapi-caz' },
-            { text: 'LinkedIn: linkedin.com/in/kapilankoch', url: 'https://www.linkedin.com/in/kapilankoch/' },
-        ],
+        content: 'kontakt.md',
     },
     {
         id: 'display',

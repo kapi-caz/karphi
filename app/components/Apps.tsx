@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react';
 import { Themes, type ThemeColors } from '../data/themes';
-import type { DesktopFile, Line } from '../data/files';
+import type { DesktopFile } from '../data/files';
 import { FileIcon, FileLabel } from './Icons';
 
 export function Explorer({ folder, items, onOpen }: {
@@ -61,8 +61,28 @@ export function Explorer({ folder, items, onOpen }: {
     );
 }
 
-export function Notepad({ lines }: { lines: Line[] }) {
-    const longest = Math.max(...lines.map((l) => (typeof l === 'string' ? l : l.text).length));
+// Markdown links: [label](https://…)
+const LINK = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g;
+
+/** One line of text with Markdown links turned into anchors; everything else stays as written. */
+function renderLine(line: string) {
+    const parts: React.ReactNode[] = [];
+    let last = 0;
+    for (const m of line.matchAll(LINK)) {
+        if (m.index > last) parts.push(line.slice(last, m.index));
+        parts.push(
+            <a key={m.index} href={m[2]} target="_blank" rel="noopener noreferrer">{m[1]}</a>,
+        );
+        last = m.index + m[0].length;
+    }
+    if (last < line.length) parts.push(line.slice(last));
+    return parts.length ? parts : '\u00a0';
+}
+
+export function Notepad({ text }: { text: string }) {
+    const lines = text.split('\n');
+    // Column count is based on what's shown, i.e. link labels without the Markdown syntax.
+    const longest = Math.max(0, ...lines.map((l) => l.replace(LINK, '$1').length));
     return (
         <div className="flex flex-col h-full">
             <div className="xp-menubar">
@@ -71,15 +91,9 @@ export function Notepad({ lines }: { lines: Line[] }) {
                 ))}
             </div>
             <div className="notepad-text" tabIndex={0}>
-                {lines.map((line, i) =>
-                    typeof line === 'string' ? (
-                        <div key={i}>{line || ' '}</div>
-                    ) : (
-                        <div key={i}>
-                            <a href={line.url} target="_blank" rel="noopener noreferrer">{line.text}</a>
-                        </div>
-                    ),
-                )}
+                {lines.map((line, i) => (
+                    <div key={i}>{renderLine(line)}</div>
+                ))}
             </div>
             <div className="xp-statusbar">
                 <span>Zeile {lines.length}, Spalte {longest + 1}</span>
