@@ -1,4 +1,15 @@
 export const Themes: ThemeMap = {
+    calm: {
+        name: 'Calm',
+        bg: 'bg-[#22262e]',                    // soft charcoal, not pure black
+        text: 'text-[#b9bec8]',                // muted grey text, lower contrast
+        border: 'border-[#434a57]',            // subtle slate border
+        prompt: 'text-[#93b3a2]',              // muted sage accent
+        selection: 'selection:bg-[#3a4150] selection:text-[#d4d8df]',
+        button: 'bg-[#7f9bb5]',                // dusty blue
+        glow: 'shadow-[0_0_20px_rgba(127,155,181,0.08)]',
+        colors: { bg: '#22262e', text: '#b9bec8', border: '#434a57', prompt: '#93b3a2', button: '#7f9bb5' }
+    },
     retro: {
         name: 'Retro Green',
         bg: 'bg-black',
@@ -32,8 +43,8 @@ export const Themes: ThemeMap = {
         glow: 'shadow-[0_0_20px_rgba(189,147,249,0.2)]',
         colors: { bg: '#282a36', text: '#f8f8f2', border: '#6272a4', prompt: '#50fa7b', button: '#bd93f9' }
     },
-    ubuntu: {
-        name: 'Ubuntu',
+    orange: {
+        name: 'Orange',
         bg: 'bg-[#300a24]',
         text: 'text-white',
         border: 'border-[#E95420]',
@@ -53,6 +64,17 @@ export const Themes: ThemeMap = {
         button: 'bg-[#b8bb26]',                // Gruvbox green
         glow: 'shadow-[0_0_20px_rgba(184,187,38,0.2)]', // Gruvbox green glow
         colors: { bg: '#282828', text: '#ebdbb2', border: '#458588', prompt: '#fabd2f', button: '#b8bb26' }
+    },
+    winter: {
+        name: 'Winter Frost',
+        bg: 'bg-[#0f1b2d]',                    // deep winter night blue
+        text: 'text-[#dce8f4]',                // snow white
+        border: 'border-[#5b80a8]',            // ice blue
+        prompt: 'text-[#9fd6f2]',              // frost cyan
+        selection: 'selection:bg-[#24405f] selection:text-white',
+        button: 'bg-[#b7d4ee]',                // pale glacier blue
+        glow: 'shadow-[0_0_20px_rgba(159,214,242,0.2)]',
+        colors: { bg: '#0f1b2d', text: '#dce8f4', border: '#5b80a8', prompt: '#9fd6f2', button: '#b7d4ee' }
     }
 };
 

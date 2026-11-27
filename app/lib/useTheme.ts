@@ -3,7 +3,7 @@ import { useSyncExternalStore } from 'react';
 import { Themes } from '../data/themes';
 
 const STORAGE_KEY = 'karphi-theme';
-export const DEFAULT_THEME = 'retro';
+export const DEFAULT_THEME = 'calm';
 
 const listeners = new Set<() => void>();
 // In-memory fallback for when localStorage is unavailable (e.g. privacy mode).
