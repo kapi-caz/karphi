@@ -1,6 +1,6 @@
 import type { IconKind } from '../data/files';
 
-const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+import { asset } from '../lib/asset';
 
 /**
  * Small XP-flavoured icons drawn in SVG, tinted with the active theme.
@@ -20,7 +20,7 @@ export function FileIcon({ kind, image, glow, size = 40 }: {
         return (
             // eslint-disable-next-line @next/next/no-img-element -- static export, tiny local SVGs
             <img
-                src={`${BASE_PATH}${image}`}
+                src={asset(image)}
                 width={size}
                 height={size}
                 alt=""
@@ -52,6 +52,16 @@ export function FileIcon({ kind, image, glow, size = 40 }: {
                     <rect x="12" y="24" width="22" height="2" fill="#9a9a9a" />
                     <path d="M4 20a2 2 0 0 1 2-2h36a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" fill="#f5cd4f" stroke="#8a6410" strokeWidth="1.2" />
                     <path d="M5 21h38" stroke="#fff3c4" strokeWidth="1.2" opacity=".8" />
+                </svg>
+            );
+        case 'web':
+            return (
+                <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden>
+                    <path d="M10 4h20l9 9v31H10z" fill="#fdfdfd" stroke="#6b6b6b" strokeWidth="1.5" strokeLinejoin="round" />
+                    <path d="M30 4v9h9" fill="#e4e4e4" stroke="#6b6b6b" strokeWidth="1.5" strokeLinejoin="round" />
+                    <rect x="15" y="10" width="11" height="2" fill="#8a8a8a" />
+                    <circle cx="24.5" cy="29" r="10" fill="var(--os-border)" stroke="#fff" strokeWidth="1.2" />
+                    <path d="M14.5 29h20M24.5 19c-4 5.5-4 14.5 0 20M24.5 19c4 5.5 4 14.5 0 20M16.5 23.5h16M16.5 34.5h16" fill="none" stroke="#fff" strokeWidth="1.1" opacity=".85" />
                 </svg>
             );
         case 'admin':

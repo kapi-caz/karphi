@@ -1,10 +1,10 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { DesktopFiles, FileById, childrenOf, type DesktopFile } from '../data/files';
 import { Themes } from '../data/themes';
 import { setTheme } from '../lib/useTheme';
 import Window, { TASKBAR_HEIGHT, type WinState } from './Window';
-import { Notepad, DisplayProperties, ErrorDialog, Explorer } from './Apps';
+import { Notepad, DisplayProperties, ErrorDialog, Explorer, Browser } from './Apps';
 import { FileIcon, FileLabel, StartGlyph } from './Icons';
 
 const MOBILE_BREAKPOINT = 640;
@@ -23,10 +23,12 @@ function useClock() {
     return now;
 }
 
-export default function Desktop({ themeKey, contents, onReboot }: {
+export default function Desktop({ themeKey, texts, pages, onReboot }: {
     themeKey: string;
     /** Notepad texts by file id, loaded from /content at build time. */
-    contents: Record<string, string>;
+    texts: Record<string, string>;
+    /** Browser pages by file id, rendered from /content at build time. */
+    pages: Record<string, ReactNode>;
     onReboot: () => void;
 }) {
     const [windows, setWindows] = useState<WinState[]>([]);
@@ -64,7 +66,7 @@ export default function Desktop({ themeKey, contents, onReboot }: {
         const y = Math.max(8, Math.min(vh - h - 8, 40 + n * 28));
         setWindows((ws) => [
             ...ws,
-            { id: file.id, x, y, w, h, z: topZ + 1, minimized: false, maximized: mobile && (file.app === 'notepad' || file.app === 'explorer') },
+            { id: file.id, x, y, w, h, z: topZ + 1, minimized: false, maximized: mobile && (file.app === 'notepad' || file.app === 'explorer' || file.app === 'browser') },
         ]);
     };
 
@@ -85,18 +87,21 @@ export default function Desktop({ themeKey, contents, onReboot }: {
     const renderApp = (file: DesktopFile) => {
         switch (file.app) {
             case 'notepad':
-                return <Notepad text={contents[file.id] ?? ''} />;
+                return <Notepad text={texts[file.id] ?? ''} />;
             case 'display':
                 return <DisplayProperties current={themeKey} onApply={setTheme} onClose={() => close(file.id)} />;
             case 'error':
                 return <ErrorDialog onClose={() => close(file.id)} />;
             case 'explorer':
                 return <Explorer folder={file} items={childrenOf(file.id)} onOpen={open} />;
+            case 'browser':
+                return <Browser file={file} page={pages[file.id]} />;
         }
     };
 
     const titleFor = (file: DesktopFile) =>
         file.app === 'notepad' ? `${file.name} - Editor`
+            : file.app === 'browser' ? `${file.name} - Browser`
             : file.app === 'explorer' ? file.name
             : file.app === 'display' ? 'Eigenschaften von Anzeige'
                 : 'sudo.exe - Zugriff verweigert';
@@ -139,7 +144,7 @@ export default function Desktop({ themeKey, contents, onReboot }: {
                         image={file.image}
                         glow={file.glow}
                         active={win.id === activeId}
-                        canMaximize={file.app === 'notepad' || file.app === 'explorer'}
+                        canMaximize={file.app === 'notepad' || file.app === 'explorer' || file.app === 'browser'}
                         onFocus={() => focus(win.id)}
                         onMove={(x, y) => update(win.id, { x, y })}
                         onMinimize={() => update(win.id, { minimized: true })}
@@ -160,7 +165,7 @@ export default function Desktop({ themeKey, contents, onReboot }: {
                     </div>
                     <div className="xp-start-body">
                         <ul className="xp-start-left">
-                            {DesktopFiles.filter((f) => f.app === 'notepad' || f.app === 'explorer').map((file) => (
+                            {DesktopFiles.filter((f) => f.app === 'notepad' || f.app === 'explorer' || f.app === 'browser').map((file) => (
                                 <li key={file.id}>
                                     <button onClick={() => open(file)}>
                                         <FileIcon kind={file.icon} image={file.image} glow={file.glow} size={28} />

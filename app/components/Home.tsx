@@ -1,11 +1,14 @@
 'use client'
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type ReactNode } from 'react';
 import { Themes } from '../data/themes';
 import { useThemeKey } from '../lib/useTheme';
 import BootScreen from './BootScreen';
 import Desktop from './Desktop';
 
-export default function Home({ contents }: { contents: Record<string, string> }) {
+export default function Home({ texts, pages }: {
+    texts: Record<string, string>;
+    pages: Record<string, ReactNode>;
+}) {
     const themeKey = useThemeKey();
     const theme = Themes[themeKey];
     const [phase, setPhase] = useState<'boot' | 'desktop'>('boot');
@@ -32,7 +35,7 @@ export default function Home({ contents }: { contents: Record<string, string> })
             {phase === 'boot' ? (
                 <BootScreen key={bootId} theme={theme} onDone={finishBoot} />
             ) : (
-                <Desktop themeKey={themeKey} contents={contents} onReboot={reboot} />
+                <Desktop themeKey={themeKey} texts={texts} pages={pages} onReboot={reboot} />
             )}
         </div>
     );

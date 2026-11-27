@@ -1,10 +1,11 @@
 // Desktop "files" — the former terminal commands, now opened in Notepad.
-// The text of each Notepad file lives in /content as Markdown and is read at build time
-// (see app/lib/content.ts).
+// The text of each file lives in /content as Markdown and is read at build time
+// (see app/lib/content.tsx). `.txt` files open in Notepad (plain text),
+// `.htm` files open in the browser window as a styled page with pictures.
 
-export type IconKind = 'text' | 'contact' | 'display' | 'admin' | 'readme' | 'folder';
+export type IconKind = 'text' | 'contact' | 'display' | 'admin' | 'readme' | 'folder' | 'web';
 
-export type AppKind = 'notepad' | 'display' | 'error' | 'explorer';
+export type AppKind = 'notepad' | 'display' | 'error' | 'explorer' | 'browser';
 
 export interface DesktopFile {
     id: string;
@@ -17,8 +18,10 @@ export interface DesktopFile {
     glow?: string;
     app: AppKind;
     /**
-     * Notepad text: path of a Markdown file inside /content (e.g. 'projects/fitti.md').
-     * Shown as plain text; [label](https://…) links become clickable.
+     * Path of a Markdown file inside /content (e.g. 'projects/fitti.md').
+     * - app 'notepad': shown as plain text; [label](https://…) links become clickable.
+     * - app 'browser': a page with frontmatter (layout, header, footer) and a Markdown body
+     *   with images and :::carousel blocks — see content/README.md.
      */
     content?: string;
     /** Id of the folder this file lives in. Files without a parent sit on the desktop. */
@@ -67,11 +70,13 @@ export const Files: DesktopFile[] = [
     },
     {
         id: 'project-musemachine',
-        name: 'MuseMachine.txt',
-        icon: 'text',
+        name: 'MuseMachine.htm',
+        icon: 'web',
         image: '/musemachine_logo.svg',
         glow: '#0FFEC5',
-        app: 'notepad',
+        app: 'browser',
+        width: 720,
+        height: 520,
         parent: 'projects',
         content: 'projects/musemachine.md',
     },
@@ -123,3 +128,10 @@ export const DesktopFiles = Files.filter((f) => !f.parent);
 export const childrenOf = (folderId: string) => Files.filter((f) => f.parent === folderId);
 
 export const FileById: Record<string, DesktopFile> = Object.fromEntries(Files.map((f) => [f.id, f]));
+
+/** Windows-style path of a file, e.g. C:\Benutzer\Kapilan\Desktop\Projekte\Fitti.txt */
+export function pathOf(file: DesktopFile): string {
+    const parts = [file.name];
+    for (let p = file.parent; p; p = FileById[p]?.parent) parts.unshift(FileById[p]?.name ?? p);
+    return ['C:', 'Benutzer', 'Kapilan', 'Desktop', ...parts].join('\\');
+}

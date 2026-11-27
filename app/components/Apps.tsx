@@ -1,7 +1,7 @@
 'use client'
-import { useState } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { Themes, type ThemeColors } from '../data/themes';
-import type { DesktopFile } from '../data/files';
+import { pathOf, type DesktopFile } from '../data/files';
 import { FileIcon, FileLabel } from './Icons';
 
 export function Explorer({ folder, items, onOpen }: {
@@ -22,7 +22,7 @@ export function Explorer({ folder, items, onOpen }: {
                 <span className="opacity-70">Adresse</span>
                 <div className="explorer-address-field">
                     <FileIcon kind="folder" size={16} />
-                    <span>C:\Benutzer\Kapilan\Desktop\{folder.name}</span>
+                    <span>{pathOf(folder)}</span>
                 </div>
             </div>
             <div className="flex flex-1 min-h-0">
@@ -31,7 +31,7 @@ export function Explorer({ folder, items, onOpen }: {
                         <div className="explorer-sidebar-title">Details</div>
                         <div className="p-2 space-y-1">
                             <div className="font-bold">{current?.name ?? folder.name}</div>
-                            <div className="opacity-70">{current ? 'Textdokument' : 'Dateiordner'}</div>
+                            <div className="opacity-70">{!current ? 'Dateiordner' : current.app === 'browser' ? 'HTML-Dokument' : 'Textdokument'}</div>
                         </div>
                     </div>
                 </aside>
@@ -56,6 +56,42 @@ export function Explorer({ folder, items, onOpen }: {
             </div>
             <div className="xp-statusbar">
                 <span>{items.length} Objekt{items.length === 1 ? '' : 'e'}</span>
+            </div>
+        </div>
+    );
+}
+
+/** Browser window for .htm pages; the page itself is rendered at build time (see PageView). */
+export function Browser({ file, page }: { file: DesktopFile; page: ReactNode }) {
+    const view = useRef<HTMLDivElement>(null);
+    const toTop = () => view.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    return (
+        <div className="flex flex-col h-full">
+            <div className="xp-menubar">
+                {['Datei', 'Bearbeiten', 'Ansicht', 'Favoriten', 'Extras', '?'].map((m) => (
+                    <span key={m}>{m}</span>
+                ))}
+            </div>
+            <div className="browser-toolbar">
+                <button className="browser-tool" disabled aria-label="Zurück"><span className="browser-arrow">◀</span> Zurück</button>
+                <button className="browser-tool" disabled aria-label="Vorwärts"><span className="browser-arrow">▶</span></button>
+                <span className="browser-sep" />
+                <button className="browser-tool" onClick={toTop}><span aria-hidden>⌂</span> Startseite</button>
+            </div>
+            <div className="explorer-address">
+                <span className="opacity-70">Adresse</span>
+                <div className="explorer-address-field">
+                    <FileIcon kind="web" size={16} />
+                    <span>{pathOf(file)}</span>
+                </div>
+                <button className="browser-tool" onClick={toTop}><span className="browser-go">➜</span> Wechseln zu</button>
+            </div>
+            <div className="browser-view" ref={view}>
+                {page}
+            </div>
+            <div className="xp-statusbar browser-status">
+                <span>Fertig</span>
+                <span>Arbeitsplatz</span>
             </div>
         </div>
     );

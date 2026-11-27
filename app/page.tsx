@@ -1,7 +1,8 @@
 import Home from './components/Home';
 import { loadContents } from './lib/content';
 
-// Server component: runs at build time (static export) and hands the Markdown texts to the client app.
+// Server component: runs at build time (static export) and hands the Markdown texts and pages to the client app.
 export default function Page() {
-    return <Home contents={loadContents()} />;
+    const { texts, pages } = loadContents();
+    return <Home texts={texts} pages={pages} />;
 }
