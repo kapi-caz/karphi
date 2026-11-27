@@ -48,7 +48,7 @@ export function Explorer({ folder, items, onOpen }: {
                             onDoubleClick={() => onOpen(file)}
                             onKeyDown={(e) => e.key === 'Enter' && onOpen(file)}
                         >
-                            <FileIcon kind={file.icon} size={42} />
+                            <FileIcon kind={file.icon} image={file.image} glow={file.glow} size={42} />
                             <FileLabel name={file.name} />
                         </button>
                     ))}
@@ -127,7 +127,7 @@ export function DisplayProperties({ current, onApply, onClose }: {
             <div className="xp-tabs">
                 <span className="is-active">Farbschema</span>
             </div>
-            <div className="xp-panel flex-1 flex flex-col gap-5">
+            <div className="xp-panel flex-1 min-h-0 overflow-y-auto flex flex-col gap-5">
                 <div className="pt-2 pb-3">
                     <MiniDesktop c={Themes[selected].colors} />
                 </div>
@@ -148,7 +148,7 @@ export function DisplayProperties({ current, onApply, onClose }: {
                     </div>
                 </fieldset>
             </div>
-            <div className="flex justify-end gap-2 p-3">
+            <div className="flex shrink-0 justify-end gap-2 p-3">
                 <button className="xp-btn" onClick={() => { onApply(selected); onClose(); }}>OK</button>
                 <button className="xp-btn" onClick={onClose}>Abbrechen</button>
                 <button className="xp-btn" disabled={selected === current} onClick={() => onApply(selected)}>Übernehmen</button>

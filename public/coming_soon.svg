@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+<title>EarthAndStars.de</title>
+<!--
+  Animation: the star flies in along the curve of its yellow tail, past the earth,
+  and settles at its original spot; the tail is drawn behind it as it goes.
+  It rests, fades out and starts again (5s loop).
+  With "reduce motion" turned on, the original static icon is shown instead.
+-->
+<style>
+  .still { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .still { display: inline; }
+    .moving { display: none; }
+    .earth { mask: url(#m); }
+  }
+</style>
+<defs>
+<path id="s" d="M1.5 42C15.5 43.8 31.2 33.8 34.6 19.9A2.5 2.5 0 0 1 39.4 21.1C35.4 37.8 17.1 44.9 1.5 42Z"/>
+<path id="star" d="M39.3 3.5Q39.6 2.2 40.4 3.2L42.1 5.2Q42.5 5.7 43.1 5.6L45.6 5.3Q47 5.2 46.3 6.4L44.9 8.5Q44.6 9 44.8 9.6L45.9 11.9Q46.4 13.2 45.1 12.9L42.6 12.2Q42 12.1 41.6 12.5L39.7 14.2Q38.7 15.1 38.6 13.8L38.4 11.2Q38.3 10.6 37.8 10.3L35.6 9Q34.4 8.3 35.7 7.8L38 6.9Q38.6 6.6 38.7 6Z"/>
+<!-- Flight path: the centre line of the tail, extended off-canvas at the start and on to the star's resting spot. -->
+<path id="fly" d="M-8 40.5L1.5 42C16 44.3 33.3 35.8 37 20.5C37.9 16.8 39.3 12.6 40.7 8.65"/>
+<clipPath id="c"><circle cx="19.5" cy="28.5" r="16.5"/></clipPath>
+<!-- Trail reveal: a thick stroke along the flight path that grows in step with the star. -->
+<mask id="trail" maskUnits="userSpaceOnUse" x="-10" y="-10" width="68" height="68">
+  <path d="M-8 40.5L1.5 42C16 44.3 33.3 35.8 37 20.5C37.9 16.8 39.3 12.6 40.7 8.65" fill="none" stroke="#fff" stroke-width="12" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1">
+    <animate attributeName="stroke-dashoffset" values="1;0;0" keyTimes="0;0.32;1" calcMode="spline" keySplines="0.3 0.55 0.35 1;0 0 1 1" dur="5s" repeatCount="indefinite"/>
+  </path>
+</mask>
+<!-- Original earth mask: gap around the whole tail (used for reduced motion). -->
+<mask id="m"><rect width="48" height="48" fill="#fff"/><use href="#s" fill="#000" stroke="#000" stroke-width="4" stroke-linejoin="round"/></mask>
+<!-- Animated earth mask: the gap only opens where the trail has been drawn. -->
+<mask id="m2">
+  <rect width="48" height="48" fill="#fff"/>
+  <g mask="url(#trail)">
+    <use href="#s" fill="#000" stroke="#000" stroke-width="4" stroke-linejoin="round"/>
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.84;0.94;1" dur="5s" repeatCount="indefinite"/>
+  </g>
+</mask>
+</defs>
+
+<g class="earth" fill="#4169B0" mask="url(#m2)">
+<path d="M19.5 12a16.5 16.5 0 1 0 0 33a16.5 16.5 0 1 0 0-33ZM19.5 15a13.5 13.5 0 1 1 0 27a13.5 13.5 0 1 1 0-27Z"/>
+<path clip-path="url(#c)" d="M0 9H18V18L15 21H0ZM25.5 9H48V46H12V34.5L15 31.5V27L18 24H20Q21 24 21 23V21L22.5 19.5H24.5Q25.5 19.5 25.5 18.5ZM24 27H19Q18 27 18 28V29Q18 30 19 30H21Q22.5 30 22.5 31.5V38H30V33Z"/>
+</g>
+
+<!-- Animated star + trail -->
+<g class="moving" fill="#E2B85C">
+  <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.84;0.94;1" dur="5s" repeatCount="indefinite"/>
+  <use href="#s" mask="url(#trail)"/>
+  <g>
+    <animateMotion keyPoints="0;1;1" keyTimes="0;0.32;1" calcMode="spline" keySplines="0.3 0.55 0.35 1;0 0 1 1" dur="5s" repeatCount="indefinite">
+      <mpath href="#fly"/>
+    </animateMotion>
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="-216;0;0" keyTimes="0;0.32;1" calcMode="spline" keySplines="0.3 0.55 0.35 1;0 0 1 1" dur="5s" repeatCount="indefinite"/>
+      <use href="#star" transform="translate(-40.7 -8.65)"/>
+    </g>
+  </g>
+</g>
+
+<!-- Static original (reduced motion) -->
+<g class="still" fill="#E2B85C">
+  <use href="#s"/>
+  <use href="#star"/>
+</g>
+</svg>

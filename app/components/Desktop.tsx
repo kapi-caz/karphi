@@ -116,7 +116,7 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
                         onDoubleClick={() => open(file)}
                         onKeyDown={(e) => e.key === 'Enter' && open(file)}
                     >
-                        <FileIcon kind={file.icon} size={42} />
+                        <FileIcon kind={file.icon} image={file.image} glow={file.glow} size={42} />
                         <FileLabel name={file.name} />
                     </button>
                 ))}
@@ -131,6 +131,8 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
                         win={win}
                         title={titleFor(file)}
                         icon={file.icon}
+                        image={file.image}
+                        glow={file.glow}
                         active={win.id === activeId}
                         canMaximize={file.app === 'notepad' || file.app === 'explorer'}
                         onFocus={() => focus(win.id)}
@@ -156,7 +158,7 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
                             {DesktopFiles.filter((f) => f.app === 'notepad' || f.app === 'explorer').map((file) => (
                                 <li key={file.id}>
                                     <button onClick={() => open(file)}>
-                                        <FileIcon kind={file.icon} size={28} />
+                                        <FileIcon kind={file.icon} image={file.image} glow={file.glow} size={28} />
                                         <span>{file.name}</span>
                                     </button>
                                 </li>
@@ -210,7 +212,7 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
                                 className={`xp-task ${win.id === activeId ? 'is-active' : ''}`}
                                 onClick={() => onTaskbarClick(win)}
                             >
-                                <FileIcon kind={file.icon} size={16} />
+                                <FileIcon kind={file.icon} image={file.image} glow={file.glow} size={16} />
                                 <span>{file.name}</span>
                             </button>
                         );

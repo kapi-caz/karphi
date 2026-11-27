@@ -1,7 +1,35 @@
 import type { IconKind } from '../data/files';
 
-/** Small XP-flavoured icons drawn in SVG, tinted with the active theme. */
-export function FileIcon({ kind, size = 40 }: { kind: IconKind; size?: number }) {
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
+/**
+ * Small XP-flavoured icons drawn in SVG, tinted with the active theme.
+ * Pass `image` (a path inside /public) to show a custom picture instead.
+ */
+export function FileIcon({ kind, image, glow, size = 40 }: {
+    kind: IconKind;
+    image?: string;
+    /** Glow colour; adds a softly pulsing glow around the icon. */
+    glow?: string;
+    size?: number;
+}) {
+    if (image) {
+        const glowStyle = glow
+            ? ({ '--glow': glow, '--glow-r': `${Math.max(2, size * 0.18)}px` } as React.CSSProperties)
+            : {};
+        return (
+            // eslint-disable-next-line @next/next/no-img-element -- static export, tiny local SVGs
+            <img
+                src={`${BASE_PATH}${image}`}
+                width={size}
+                height={size}
+                alt=""
+                draggable={false}
+                className={glow ? 'icon-glow' : undefined}
+                style={{ width: size, height: size, objectFit: 'contain', ...glowStyle }}
+            />
+        );
+    }
     switch (kind) {
         case 'display':
             return (

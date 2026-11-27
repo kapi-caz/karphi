@@ -11,6 +11,10 @@ export interface DesktopFile {
     /** Label under the desktop icon and in the window title. */
     name: string;
     icon: IconKind;
+    /** Optional custom icon from /public (e.g. '/my_icon.svg'); replaces the drawn icon. */
+    image?: string;
+    /** Optional glow colour; makes the icon softly pulse with a glow (e.g. '#0FFEC5'). */
+    glow?: string;
     app: AppKind;
     lines?: Line[];
     /** Id of the folder this file lives in. Files without a parent sit on the desktop. */
@@ -88,6 +92,8 @@ export const Files: DesktopFile[] = [
         id: 'project-musemachine',
         name: 'MuseMachine.txt',
         icon: 'text',
+        image: '/musemachine_logo.svg',
+        glow: '#0FFEC5',
         app: 'notepad',
         parent: 'projects',
         lines: [
@@ -113,6 +119,21 @@ export const Files: DesktopFile[] = [
         ],
     },
     {
+        id: 'project-coming-soon',
+        name: 'Coming soon.txt',
+        icon: 'text',
+        image: '/coming_soon.svg',
+        app: 'notepad',
+        parent: 'projects',
+        lines: [
+            'COMING SOON',
+            '===========',
+            '',
+            'Ein neues Projekt ist in Arbeit.',
+            'Bald gibt es hier mehr zu sehen...',
+        ],
+    },
+    {
         id: 'contact',
         name: 'kontakt.txt',
         icon: 'contact',
@@ -131,7 +152,7 @@ export const Files: DesktopFile[] = [
         icon: 'display',
         app: 'display',
         width: 380,
-        height: 430,
+        height: 500,
     },
     {
         id: 'sudo',

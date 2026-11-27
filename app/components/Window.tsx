@@ -18,6 +18,8 @@ interface Props {
     win: WinState;
     title: string;
     icon: IconKind;
+    image?: string;
+    glow?: string;
     active: boolean;
     canMaximize?: boolean;
     onFocus: () => void;
@@ -31,7 +33,7 @@ interface Props {
 export const TASKBAR_HEIGHT = 36;
 
 export default function Window({
-    win, title, icon, active, canMaximize = true,
+    win, title, icon, image, glow, active, canMaximize = true,
     onFocus, onMove, onMinimize, onToggleMaximize, onClose, children,
 }: Props) {
     const drag = useRef<{ dx: number; dy: number } | null>(null);
@@ -75,7 +77,7 @@ export default function Window({
                 onPointerCancel={endDrag}
                 onDoubleClick={canMaximize ? onToggleMaximize : undefined}
             >
-                <FileIcon kind={icon} size={16} />
+                <FileIcon kind={icon} image={image} glow={glow} size={16} />
                 <span className="xp-title">{title}</span>
                 <div className="xp-controls">
                     <button className="xp-ctrl" aria-label="Minimieren" onClick={onMinimize}>

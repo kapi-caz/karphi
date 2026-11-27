@@ -415,3 +415,28 @@ body {
 .explorer-grid .os-icon { color: var(--os-text); }
 .explorer-grid .os-icon span { text-shadow: none; }
 .explorer-grid .os-icon.is-selected span { color: #fff; }
+
+/* Glowing icon: only the glow's strength breathes, like a sine wave
+   (easeInOutSine curve, played forwards then backwards). The blur radius stays
+   fixed and the glow is soft and translucent, so the shape itself never looks bigger. */
+.icon-glow {
+  /* Use the image's light variant (no dark backdrop tile), so only the shape itself glows. */
+  color-scheme: light;
+  animation: icon-glow 1.4s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+}
+@keyframes icon-glow {
+  from {
+    filter: drop-shadow(0 0 var(--glow-r) color-mix(in srgb, var(--glow) 0%, transparent))
+            drop-shadow(0 0 calc(var(--glow-r) * 2) color-mix(in srgb, var(--glow) 0%, transparent));
+  }
+  to {
+    filter: drop-shadow(0 0 var(--glow-r) color-mix(in srgb, var(--glow) 55%, transparent))
+            drop-shadow(0 0 calc(var(--glow-r) * 2) color-mix(in srgb, var(--glow) 35%, transparent));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .icon-glow {
+    animation: none;
+    filter: drop-shadow(0 0 var(--glow-r) color-mix(in srgb, var(--glow) 35%, transparent));
+  }
+}
