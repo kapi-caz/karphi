@@ -15,6 +15,17 @@ export function FileIcon({ kind, size = 40 }: { kind: IconKind; size?: number })
                     <rect x="12" y="39" width="24" height="3" rx="1.5" fill="#888" />
                 </svg>
             );
+        case 'folder':
+            return (
+                <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden>
+                    <path d="M4 11a2 2 0 0 1 2-2h12l4 4h20a2 2 0 0 1 2 2v25a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" fill="#d9a521" stroke="#8a6410" strokeWidth="1.2" />
+                    <rect x="9" y="15" width="30" height="20" fill="#fdfdfd" stroke="#9a9a9a" strokeWidth=".8" />
+                    <rect x="12" y="19" width="16" height="2" fill="var(--os-border)" />
+                    <rect x="12" y="24" width="22" height="2" fill="#9a9a9a" />
+                    <path d="M4 20a2 2 0 0 1 2-2h36a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" fill="#f5cd4f" stroke="#8a6410" strokeWidth="1.2" />
+                    <path d="M5 21h38" stroke="#fff3c4" strokeWidth="1.2" opacity=".8" />
+                </svg>
+            );
         case 'admin':
             return (
                 <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden>
@@ -63,5 +74,18 @@ export function StartGlyph() {
             <path d="M4.5 6.5l3 2.5-3 2.5" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             <rect x="9" y="11" width="4.5" height="1.6" fill="#fff" />
         </svg>
+    );
+}
+
+/** File name with a soft line-break before the extension, so long names wrap as "MuseMachine" / ".txt". */
+export function FileLabel({ name }: { name: string }) {
+    const dot = name.lastIndexOf('.');
+    if (dot <= 0) return <span>{name}</span>;
+    return (
+        <span>
+            {name.slice(0, dot)}
+            <wbr />
+            {name.slice(dot)}
+        </span>
     );
 }

@@ -12,7 +12,7 @@ const BOOT_LINES: { text: string; type?: 'ok' | 'info' | 'head' }[] = [
     { text: 'Starte Dienste: network, coffee, motivation ...', type: 'ok' },
     { text: 'Initialisiere System...', type: 'info' },
     { text: 'Lade Benutzerprofil...', type: 'info' },
-    { text: 'Lade Desktop: about.txt, skills.txt, projects.txt, kontakt.txt', type: 'ok' },
+    { text: 'Lade Desktop: about.txt, skills.txt, Projekte, kontakt.txt', type: 'ok' },
     { text: 'Starte grafische Oberfläche ...', type: 'info' },
 ];
 

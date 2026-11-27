@@ -1,7 +1,65 @@
 'use client'
 import { useState } from 'react';
 import { Themes, type ThemeColors } from '../data/themes';
-import type { Line } from '../data/files';
+import type { DesktopFile, Line } from '../data/files';
+import { FileIcon, FileLabel } from './Icons';
+
+export function Explorer({ folder, items, onOpen }: {
+    folder: DesktopFile;
+    items: DesktopFile[];
+    onOpen: (file: DesktopFile) => void;
+}) {
+    const [selected, setSelected] = useState<string | null>(null);
+    const current = items.find((f) => f.id === selected);
+    return (
+        <div className="flex flex-col h-full">
+            <div className="xp-menubar">
+                {['Datei', 'Bearbeiten', 'Ansicht', 'Favoriten', 'Extras', '?'].map((m) => (
+                    <span key={m}>{m}</span>
+                ))}
+            </div>
+            <div className="explorer-address">
+                <span className="opacity-70">Adresse</span>
+                <div className="explorer-address-field">
+                    <FileIcon kind="folder" size={16} />
+                    <span>C:\Benutzer\Kapilan\Desktop\{folder.name}</span>
+                </div>
+            </div>
+            <div className="flex flex-1 min-h-0">
+                <aside className="explorer-sidebar">
+                    <div className="explorer-sidebar-box">
+                        <div className="explorer-sidebar-title">Details</div>
+                        <div className="p-2 space-y-1">
+                            <div className="font-bold">{current?.name ?? folder.name}</div>
+                            <div className="opacity-70">{current ? 'Textdokument' : 'Dateiordner'}</div>
+                        </div>
+                    </div>
+                </aside>
+                <div className="explorer-grid" onPointerDown={() => setSelected(null)}>
+                    {items.map((file) => (
+                        <button
+                            key={file.id}
+                            className={`os-icon ${selected === file.id ? 'is-selected' : ''}`}
+                            onPointerDown={(e) => {
+                                e.stopPropagation();
+                                setSelected(file.id);
+                            }}
+                            onPointerUp={(e) => e.pointerType === 'touch' && onOpen(file)}
+                            onDoubleClick={() => onOpen(file)}
+                            onKeyDown={(e) => e.key === 'Enter' && onOpen(file)}
+                        >
+                            <FileIcon kind={file.icon} size={42} />
+                            <FileLabel name={file.name} />
+                        </button>
+                    ))}
+                </div>
+            </div>
+            <div className="xp-statusbar">
+                <span>{items.length} Objekt{items.length === 1 ? '' : 'e'}</span>
+            </div>
+        </div>
+    );
+}
 
 export function Notepad({ lines }: { lines: Line[] }) {
     const longest = Math.max(...lines.map((l) => (typeof l === 'string' ? l : l.text).length));

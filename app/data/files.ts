@@ -2,9 +2,9 @@
 
 export type Line = string | { text: string; url: string };
 
-export type IconKind = 'text' | 'contact' | 'display' | 'admin' | 'readme';
+export type IconKind = 'text' | 'contact' | 'display' | 'admin' | 'readme' | 'folder';
 
-export type AppKind = 'notepad' | 'display' | 'error';
+export type AppKind = 'notepad' | 'display' | 'error' | 'explorer';
 
 export interface DesktopFile {
     id: string;
@@ -13,6 +13,8 @@ export interface DesktopFile {
     icon: IconKind;
     app: AppKind;
     lines?: Line[];
+    /** Id of the folder this file lives in. Files without a parent sit on the desktop. */
+    parent?: string;
     width?: number;
     height?: number;
 }
@@ -31,7 +33,7 @@ export const Files: DesktopFile[] = [
             '',
             '  about.txt      - Erzählt dir etwas über mich.',
             '  skills.txt     - Zeigt meine technischen Fähigkeiten.',
-            '  projects.txt   - Listet meine aktuellen Projekte auf.',
+            '  Projekte       - Ordner mit meinen aktuellen Projekten.',
             '  kontakt.txt    - Kontaktinformationen.',
             '  Anzeige        - Wechselt das Farbschema.',
             '',
@@ -61,16 +63,53 @@ export const Files: DesktopFile[] = [
     },
     {
         id: 'projects',
-        name: 'projects.txt',
+        name: 'Projekte',
+        icon: 'folder',
+        app: 'explorer',
+        width: 560,
+        height: 360,
+    },
+    {
+        id: 'project-terminal-portfolio',
+        name: 'Terminal-Portfolio.txt',
         icon: 'text',
         app: 'notepad',
+        parent: 'projects',
         lines: [
-            'PROJEKTE',
-            '========',
+            'TERMINAL PORTFOLIO',
+            '==================',
             '',
-            '1. Terminal Portfolio (Dieses Projekt) - React & Tailwind',
-            '2. MuseMachine - Startup rund um bildgenerierende KI',
-            '3. Fitti (in Entwicklung) - Ganz simple Android App um einfach einen Workout zu tracken mit einem Timer',
+            'Dieses Projekt.',
+            '',
+            'Stack: React & Tailwind',
+        ],
+    },
+    {
+        id: 'project-musemachine',
+        name: 'MuseMachine.txt',
+        icon: 'text',
+        app: 'notepad',
+        parent: 'projects',
+        lines: [
+            'MUSEMACHINE',
+            '===========',
+            '',
+            'Startup rund um bildgenerierende KI.',
+        ],
+    },
+    {
+        id: 'project-fitti',
+        name: 'Fitti.txt',
+        icon: 'text',
+        app: 'notepad',
+        parent: 'projects',
+        lines: [
+            'FITTI',
+            '=====',
+            '',
+            'Status: in Entwicklung',
+            '',
+            'Ganz simple Android App um einfach einen Workout zu tracken mit einem Timer.',
         ],
     },
     {
@@ -103,5 +142,10 @@ export const Files: DesktopFile[] = [
         height: 150,
     },
 ];
+
+/** Files placed directly on the desktop. */
+export const DesktopFiles = Files.filter((f) => !f.parent);
+
+export const childrenOf = (folderId: string) => Files.filter((f) => f.parent === folderId);
 
 export const FileById: Record<string, DesktopFile> = Object.fromEntries(Files.map((f) => [f.id, f]));

@@ -90,7 +90,8 @@ body {
   text-align: center;
   line-height: 1.2;
   text-shadow: 1px 1px 1px rgba(0,0,0,.9);
-  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 .os-icon.is-selected svg { filter: drop-shadow(0 0 0 var(--os-border)) brightness(.8) sepia(.3); }
 .os-icon.is-selected span { background: var(--os-border); text-shadow: none; }
@@ -362,3 +363,55 @@ body {
   background: linear-gradient(to bottom right, #f1a089, #d6461f 55%, #a52a0a);
   font-size: 13px;
 }
+
+/* Explorer (folder window) */
+.explorer-address {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  background: var(--os-surface-hi);
+  border-bottom: 1px solid color-mix(in srgb, var(--os-border) 50%, transparent);
+}
+.explorer-address-field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 5px;
+  background: var(--os-bg);
+  border: 1px solid color-mix(in srgb, var(--os-border) 70%, black);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.explorer-sidebar {
+  width: 150px;
+  flex-shrink: 0;
+  padding: 10px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--os-border) 45%, var(--os-bg)), color-mix(in srgb, var(--os-border) 20%, var(--os-bg)));
+}
+.explorer-sidebar-box { background: var(--os-surface-hi); border-radius: 3px 3px 0 0; overflow: hidden; }
+.explorer-sidebar-title {
+  padding: 3px 8px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(to right, var(--os-border), var(--os-title-lo));
+}
+@media (max-width: 480px) { .explorer-sidebar { display: none; } }
+.explorer-grid {
+  flex: 1;
+  overflow: auto;
+  margin: 2px;
+  padding: 8px;
+  background: var(--os-bg);
+  border: 1px solid color-mix(in srgb, var(--os-border) 70%, black);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 96px);
+  grid-auto-rows: max-content;
+  gap: 6px;
+  align-content: start;
+}
+.explorer-grid .os-icon { color: var(--os-text); }
+.explorer-grid .os-icon span { text-shadow: none; }
+.explorer-grid .os-icon.is-selected span { color: #fff; }

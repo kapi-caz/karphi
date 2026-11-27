@@ -1,11 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { Files, FileById, type DesktopFile } from '../data/files';
+import { DesktopFiles, FileById, childrenOf, type DesktopFile } from '../data/files';
 import { Themes } from '../data/themes';
 import { setTheme } from '../lib/useTheme';
 import Window, { TASKBAR_HEIGHT, type WinState } from './Window';
-import { Notepad, DisplayProperties, ErrorDialog } from './Apps';
-import { FileIcon, StartGlyph } from './Icons';
+import { Notepad, DisplayProperties, ErrorDialog, Explorer } from './Apps';
+import { FileIcon, FileLabel, StartGlyph } from './Icons';
 
 const MOBILE_BREAKPOINT = 640;
 
@@ -59,7 +59,7 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
         const y = Math.max(8, Math.min(vh - h - 8, 40 + n * 28));
         setWindows((ws) => [
             ...ws,
-            { id: file.id, x, y, w, h, z: topZ + 1, minimized: false, maximized: mobile && file.app === 'notepad' },
+            { id: file.id, x, y, w, h, z: topZ + 1, minimized: false, maximized: mobile && (file.app === 'notepad' || file.app === 'explorer') },
         ]);
     };
 
@@ -85,11 +85,14 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
                 return <DisplayProperties current={themeKey} onApply={setTheme} onClose={() => close(file.id)} />;
             case 'error':
                 return <ErrorDialog onClose={() => close(file.id)} />;
+            case 'explorer':
+                return <Explorer folder={file} items={childrenOf(file.id)} onOpen={open} />;
         }
     };
 
     const titleFor = (file: DesktopFile) =>
         file.app === 'notepad' ? `${file.name} - Editor`
+            : file.app === 'explorer' ? file.name
             : file.app === 'display' ? 'Eigenschaften von Anzeige'
                 : 'sudo.exe - Zugriff verweigert';
 
@@ -100,7 +103,7 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
 
             {/* Desktop icons */}
             <div className="os-icons" onPointerDown={() => setSelected(null)}>
-                {Files.map((file) => (
+                {DesktopFiles.map((file) => (
                     <button
                         key={file.id}
                         className={`os-icon ${selected === file.id ? 'is-selected' : ''}`}
@@ -114,7 +117,7 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
                         onKeyDown={(e) => e.key === 'Enter' && open(file)}
                     >
                         <FileIcon kind={file.icon} size={42} />
-                        <span>{file.name}</span>
+                        <FileLabel name={file.name} />
                     </button>
                 ))}
             </div>
@@ -129,7 +132,7 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
                         title={titleFor(file)}
                         icon={file.icon}
                         active={win.id === activeId}
-                        canMaximize={file.app === 'notepad'}
+                        canMaximize={file.app === 'notepad' || file.app === 'explorer'}
                         onFocus={() => focus(win.id)}
                         onMove={(x, y) => update(win.id, { x, y })}
                         onMinimize={() => update(win.id, { minimized: true })}
@@ -150,7 +153,7 @@ export default function Desktop({ themeKey, onReboot }: { themeKey: string; onRe
                     </div>
                     <div className="xp-start-body">
                         <ul className="xp-start-left">
-                            {Files.filter((f) => f.app === 'notepad').map((file) => (
+                            {DesktopFiles.filter((f) => f.app === 'notepad' || f.app === 'explorer').map((file) => (
                                 <li key={file.id}>
                                     <button onClick={() => open(file)}>
                                         <FileIcon kind={file.icon} size={28} />
