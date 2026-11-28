@@ -64,7 +64,8 @@ export default function Desktop({ themeKey, texts, pages, onReboot }: {
         const n = windows.length;
         const x = Math.max(8, Math.min(vw - w - 8, 140 + n * 28));
         const y = Math.max(8, Math.min(vh - h - 8, 40 + n * 28));
-        setWindows((ws) => [
+        // Skip if it was opened in the meantime (e.g. the start-up effect running twice in dev).
+        setWindows((ws) => ws.some((win) => win.id === file.id) ? ws : [
             ...ws,
             { id: file.id, x, y, w, h, z: topZ + 1, minimized: false, maximized: mobile && (file.app === 'notepad' || file.app === 'explorer' || file.app === 'browser') },
         ]);
@@ -76,6 +77,13 @@ export default function Desktop({ themeKey, texts, pages, onReboot }: {
         if (win.id === activeId) update(win.id, { minimized: true });
         else update(win.id, { minimized: false, z: topZ + 1 });
     };
+
+    // Once the desktop is up, open the Projekte folder so visitors land right on the projects.
+    const [openOnStart] = useState(() => open);
+    useEffect(() => {
+        const id = setTimeout(() => openOnStart(FileById.projects), 0);
+        return () => clearTimeout(id);
+    }, [openOnStart]);
 
     // Escape closes the start menu.
     useEffect(() => {
