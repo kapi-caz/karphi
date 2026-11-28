@@ -96,8 +96,8 @@ export default function PageView({ meta, body }: { meta: PageMeta; body: string 
                 </header>
             )}
             <div className="page-body">
-                <Markdown remarkPlugins={[remarkGfm, remarkDirective, remarkCarousel]} components={components}>
-                    {body}
+                <Markdown remarkPlugins={[remarkGfm, remarkDirective, remarkCarousel]} components={components} skipHtml>
+                    {body.replace(/<!--[\s\S]*?-->\n?/g, '')}
                 </Markdown>
             </div>
             {footer?.links?.length ? (

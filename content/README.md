@@ -45,7 +45,7 @@ Normal Markdown text: paragraphs, **bold**, lists, [links](https://…), ## head
 | Carousel | Images between `:::carousel` and `:::`; arrows, dots, ←/→ keys and swiping on phones    |
 | Footer   | `footer: links:` in the frontmatter, each with `label` and `url`                        |
 
-Blocks appear in the order they're written in the body.
+Blocks appear in the order they're written in the body. `<!-- comments -->` are notes for you and never show up on the page; other raw HTML is ignored too.
 
 ### Layouts
 

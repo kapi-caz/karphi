@@ -14,7 +14,9 @@ export default function Carousel({ slides }: { slides: Slide[] }) {
     if (!slides.length) return null;
 
     const count = slides.length;
-    const go = (i: number) => setIndex((i + count) % count);
+    const wrap = (i: number) => (i + count) % count;
+    const go = (i: number) => setIndex(wrap(i));
+    const step = (d: number) => setIndex((i) => wrap(i + d));
     const slide = slides[index];
 
     return (
@@ -25,8 +27,8 @@ export default function Carousel({ slides }: { slides: Slide[] }) {
             aria-label={`Bild ${index + 1} von ${count}`}
             tabIndex={0}
             onKeyDown={(e) => {
-                if (e.key === 'ArrowLeft') go(index - 1);
-                if (e.key === 'ArrowRight') go(index + 1);
+                if (e.key === 'ArrowLeft') step(-1);
+                if (e.key === 'ArrowRight') step(1);
             }}
         >
             <div
@@ -36,20 +38,20 @@ export default function Carousel({ slides }: { slides: Slide[] }) {
                     if (swipe.current === null) return;
                     const dx = e.clientX - swipe.current;
                     swipe.current = null;
-                    if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
+                    if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
                 }}
                 onPointerCancel={() => { swipe.current = null; }}
             >
                 <div className="page-carousel-track" style={{ transform: `translateX(-${index * 100}%)` }}>
                     {slides.map((s, i) => (
                         // eslint-disable-next-line @next/next/no-img-element -- static export
-                        <img key={i} src={s.src} alt={s.alt} draggable={false} loading={i === 0 ? undefined : 'lazy'} aria-hidden={i !== index} />
+                        <img key={i} src={s.src} alt={s.alt} draggable={false} aria-hidden={i !== index} />
                     ))}
                 </div>
                 {count > 1 && (
                     <>
-                        <button className="page-carousel-arrow is-prev" aria-label="Vorheriges Bild" onClick={() => go(index - 1)}>‹</button>
-                        <button className="page-carousel-arrow is-next" aria-label="Nächstes Bild" onClick={() => go(index + 1)}>›</button>
+                        <button className="page-carousel-arrow is-prev" aria-label="Vorheriges Bild" onClick={() => step(-1)}>‹</button>
+                        <button className="page-carousel-arrow is-next" aria-label="Nächstes Bild" onClick={() => step(1)}>›</button>
                     </>
                 )}
             </div>
